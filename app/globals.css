@@ -1,0 +1,154 @@
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600;700;800&family=Work+Sans:wght@400;500;600;700&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --cream: #F6EEDA;
+  --cream-deep: #EFE3C6;
+  --maroon: #6E1F2A;
+  --maroon-deep: #4E141C;
+  --brass: #B8892B;
+  --brass-light: #D9AD52;
+  --green: #204A3B;
+  --ink: #241712;
+  --ink-soft: #5B4B3E;
+  --line: #D8C9A3;
+}
+
+html, body {
+  background: var(--cream);
+  color: var(--ink);
+  font-family: 'Work Sans', ui-sans-serif, system-ui, sans-serif;
+  font-size: 16px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+
+.font-display {
+  font-family: 'Fraunces', serif;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+@keyframes pulseDot {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.35; }
+}
+.live-dot {
+  animation: pulseDot 2s ease-in-out infinite;
+}
+
+@keyframes ring {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(-18deg); }
+  75% { transform: rotate(18deg); }
+}
+.ring-bell {
+  animation: ring 0.6s ease-in-out 3;
+  transform-origin: top center;
+  display: inline-block;
+}
+
+@keyframes petal-fall {
+  0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(240px) rotate(360deg); opacity: 0; }
+}
+.petal {
+  position: absolute;
+  top: -20px;
+  animation-name: petal-fall;
+  animation-timing-function: ease-in;
+  animation-fill-mode: forwards;
+  pointer-events: none;
+}
+
+/* ---- Polish: smooth, tactile UI ---- */
+
+.panel-card,
+.stat-card {
+  transition: transform 220ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 220ms ease;
+}
+.panel-card:hover,
+.stat-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 28px -12px rgba(78, 20, 28, 0.22);
+}
+
+.hero-arch {
+  transition: box-shadow 300ms ease;
+  position: relative;
+  overflow: hidden;
+}
+.hero-arch:hover {
+  box-shadow: 0 0 0 1px rgba(184, 137, 43, 0.4), 0 12px 32px -8px rgba(184, 137, 43, 0.35);
+}
+.hero-arch::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(115deg, transparent 20%, rgba(217, 173, 82, 0.16) 45%, transparent 70%);
+  transform: translateX(-120%);
+  animation: shimmerSweep 5s ease-in-out infinite;
+  pointer-events: none;
+}
+@keyframes shimmerSweep {
+  0%, 60% { transform: translateX(-120%); }
+  100% { transform: translateX(120%); }
+}
+
+button {
+  transition: transform 150ms ease, filter 150ms ease, box-shadow 150ms ease, opacity 150ms ease;
+}
+button:not(:disabled):hover {
+  filter: brightness(1.05);
+}
+button:not(:disabled):active {
+  transform: scale(0.97);
+}
+
+input, select, textarea {
+  transition: border-color 180ms ease, box-shadow 180ms ease;
+}
+input:focus, select:focus, textarea:focus {
+  border-color: #B8892B !important;
+  box-shadow: 0 0 0 3px rgba(184, 137, 43, 0.18);
+  outline: none;
+}
+
+/* Smoother, slimmer scrollbars on the pivot/donor tables */
+.overflow-x-auto::-webkit-scrollbar,
+.overflow-y-auto::-webkit-scrollbar {
+  height: 6px;
+  width: 6px;
+}
+.overflow-x-auto::-webkit-scrollbar-thumb,
+.overflow-y-auto::-webkit-scrollbar-thumb {
+  background: #D8C9A3;
+  border-radius: 999px;
+}
+
+@keyframes modalPop {
+  0% { opacity: 0; transform: scale(0.94) translateY(8px); }
+  100% { opacity: 1; transform: scale(1) translateY(0); }
+}
+.modal-pop {
+  animation: modalPop 220ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes fadeInUp {
+  0% { opacity: 0; transform: translateY(10px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+.fade-in {
+  animation: fadeInUp 500ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* number transitions on the hero balance and stat cards */
+.tabular {
+  transition: color 250ms ease;
+}
