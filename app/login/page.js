@@ -1,9 +1,16 @@
 "use client";
 
 import { useState } from "react";
+import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import { Landmark } from "lucide-react";
 import { supabase } from "../../lib/supabaseClient";
+
+// React Three Fiber touches window/document at module scope, so it must never
+// be part of the server-rendered HTML — load it client-only.
+const CorridorScene = dynamic(() => import("../../components/three/CorridorScene"), {
+  ssr: false,
+});
 
 export default function LoginPage() {
   const router = useRouter();
@@ -13,6 +20,7 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
+  const [introDone, setIntroDone] = useState(false);
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -46,94 +54,107 @@ export default function LoginPage() {
   }
 
   return (
-    <div
-      className="min-h-screen flex items-center justify-center px-4"
-      style={{ background: "linear-gradient(180deg, #4E141C 0%, #6E1F2A 100%)" }}
-    >
-      <div className="w-full max-w-sm rounded-2xl p-7" style={{ background: "#FFFDF7" }}>
-        <div className="flex items-center gap-2 mb-1">
-          <div
-            className="w-9 h-9 rounded-full flex items-center justify-center"
-            style={{ background: "#B8892B", color: "#4E141C" }}
-          >
-            <Landmark size={18} />
-          </div>
-          <h1 className="font-display text-xl" style={{ color: "#6E1F2A" }}>
-            Welcome to Senur Amman Kovil
-          </h1>
-        </div>
-        <p className="text-sm mb-5" style={{ color: "#5B4B3E" }}>
-          Private access for trustees and volunteers only.
-        </p>
+    <div className="min-h-screen relative overflow-hidden" style={{ background: "#0d0405" }}>
+      <CorridorScene variant="entrance" onIntroDone={() => setIntroDone(true)} />
 
-        <form onSubmit={handleSubmit} className="flex flex-col gap-3">
-          <input
-            required
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="Email address"
-            className="px-3 py-2.5 rounded-lg outline-none text-sm border"
-            style={{ borderColor: "#D8C9A3" }}
-          />
-          {mode !== "forgot" && (
+      <div
+        className="min-h-screen flex items-center justify-center px-4 relative"
+        style={{ zIndex: 10 }}
+      >
+        <div
+          className={`w-full max-w-sm rounded-2xl p-7 modal-pop ${introDone ? "" : "opacity-0"}`}
+          style={{
+            background: "rgba(255,253,247,0.94)",
+            backdropFilter: "blur(10px)",
+            border: "1px solid rgba(216,201,163,0.7)",
+            boxShadow: "0 30px 70px -20px rgba(0,0,0,0.6)",
+            transition: "opacity 0.8s ease",
+          }}
+        >
+          <div className="flex items-center gap-2 mb-1">
+            <div
+              className="w-9 h-9 rounded-full flex items-center justify-center"
+              style={{ background: "#B8892B", color: "#4E141C" }}
+            >
+              <Landmark size={18} />
+            </div>
+            <h1 className="font-display text-xl" style={{ color: "#6E1F2A" }}>
+              Welcome to Senur Amman Kovil
+            </h1>
+          </div>
+          <p className="text-sm mb-5" style={{ color: "#5B4B3E" }}>
+            Private access for trustees and volunteers only.
+          </p>
+
+          <form onSubmit={handleSubmit} className="flex flex-col gap-3">
             <input
               required
-              type="password"
-              minLength={6}
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="Password"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Email address"
               className="px-3 py-2.5 rounded-lg outline-none text-sm border"
               style={{ borderColor: "#D8C9A3" }}
             />
-          )}
-          {error && <p className="text-sm" style={{ color: "#8A2C2C" }}>{error}</p>}
-          {notice && <p className="text-sm" style={{ color: "#204A3B" }}>{notice}</p>}
-          <button
-            type="submit"
-            disabled={loading}
-            className="py-2.5 rounded-lg font-medium text-sm disabled:opacity-60"
-            style={{ background: "#6E1F2A", color: "#F6EEDA" }}
-          >
-            {loading
-              ? "Please wait…"
-              : mode === "signin" ? "Sign in"
-              : mode === "signup" ? "Create account"
-              : "Send reset link"}
-          </button>
-        </form>
+            {mode !== "forgot" && (
+              <input
+                required
+                type="password"
+                minLength={6}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Password"
+                className="px-3 py-2.5 rounded-lg outline-none text-sm border"
+                style={{ borderColor: "#D8C9A3" }}
+              />
+            )}
+            {error && <p className="text-sm" style={{ color: "#8A2C2C" }}>{error}</p>}
+            {notice && <p className="text-sm" style={{ color: "#204A3B" }}>{notice}</p>}
+            <button
+              type="submit"
+              disabled={loading}
+              className="py-2.5 rounded-lg font-medium text-sm disabled:opacity-60"
+              style={{ background: "#6E1F2A", color: "#F6EEDA" }}
+            >
+              {loading
+                ? "Please wait…"
+                : mode === "signin" ? "Sign in"
+                : mode === "signup" ? "Create account"
+                : "Send reset link"}
+            </button>
+          </form>
 
-        <div className="flex items-center justify-between mt-4">
-          <button
-            onClick={() => { setMode(mode === "signin" ? "signup" : "signin"); setError(""); setNotice(""); }}
-            className="text-xs underline"
-            style={{ color: "#5B4B3E" }}
-          >
-            {mode === "signup" ? "Already have an account? Sign in" : "Need an account? Sign up"}
-          </button>
-          {mode !== "forgot" ? (
+          <div className="flex items-center justify-between mt-4">
             <button
-              onClick={() => { setMode("forgot"); setError(""); setNotice(""); }}
+              onClick={() => { setMode(mode === "signin" ? "signup" : "signin"); setError(""); setNotice(""); }}
               className="text-xs underline"
               style={{ color: "#5B4B3E" }}
             >
-              Forgot password?
+              {mode === "signup" ? "Already have an account? Sign in" : "Need an account? Sign up"}
             </button>
-          ) : (
-            <button
-              onClick={() => { setMode("signin"); setError(""); setNotice(""); }}
-              className="text-xs underline"
-              style={{ color: "#5B4B3E" }}
-            >
-              Back to sign in
-            </button>
-          )}
+            {mode !== "forgot" ? (
+              <button
+                onClick={() => { setMode("forgot"); setError(""); setNotice(""); }}
+                className="text-xs underline"
+                style={{ color: "#5B4B3E" }}
+              >
+                Forgot password?
+              </button>
+            ) : (
+              <button
+                onClick={() => { setMode("signin"); setError(""); setNotice(""); }}
+                className="text-xs underline"
+                style={{ color: "#5B4B3E" }}
+              >
+                Back to sign in
+              </button>
+            )}
+          </div>
+
+          <p className="text-[11px] mt-5 text-center" style={{ color: "#5B4B3E" }}>
+            New accounts start as view-only. A trustee can grant recording access from the Supabase dashboard.
+          </p>
         </div>
-
-        <p className="text-[11px] mt-5 text-center" style={{ color: "#5B4B3E" }}>
-          New accounts start as view-only. A trustee can grant recording access from the Supabase dashboard.
-        </p>
       </div>
     </div>
   );
