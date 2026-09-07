@@ -55,7 +55,7 @@ export default function HomePage() {
     <div className="min-h-screen relative" style={{ background: "#0d0405" }}>
       <CorridorScene
         variant="sanctum"
-        deityImage="/images/senur-amman.jpg"
+        deityImage="/senur-amman.jpg"
         onIntroDone={() => setIntroDone(true)}
       />
 
