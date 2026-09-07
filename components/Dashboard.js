@@ -12,6 +12,7 @@ import {
 import { supabase } from "../lib/supabaseClient";
 import { tierFor } from "../lib/patronTiers";
 import WelcomeShower from "./WelcomeShower";
+import Carousel3D, { Slide } from "./Carousel3D";
 
 const MODES = ["Cash", "UPI", "Card", "Cheque", "Bank Transfer"];
 const PURPOSES = ["Temple Hundi Cash", "Kumbabishekam", "Aadi Krithikai", "Village Festival", "Annadanam", "Renovation", "General", "Other"];
@@ -405,7 +406,11 @@ export default function Dashboard({ user, role }) {
       <main className="max-w-6xl mx-auto px-5 sm:px-8 -mt-6 pb-16">
         {error && <div className="mb-4 text-sm px-4 py-2.5 rounded-lg" style={{ background: "#FBE4E4", color: "#8A2C2C" }}>{error}</div>}
 
-        <div className="fade-in grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4" style={{ animationDelay: '0ms' }}>
+        <div className="fade-in" style={{ animationDelay: '0ms' }}>
+        <Carousel3D accent={C.maroon} line={C.line}>
+
+        <Slide title="Overview">
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4">
           {[
             { label: "Today (net)", value: fmtINR(stats.todayNet), tone: stats.todayNet < 0 ? "#8A2C2C" : C.green, icon: CalendarDays },
             { label: "This month (net)", value: fmtINR(stats.monthNet), tone: stats.monthNet < 0 ? "#8A2C2C" : C.green, icon: TrendingUp },
@@ -420,8 +425,10 @@ export default function Dashboard({ user, role }) {
             </div>
           ))}
         </div>
+        </Slide>
 
-        <div className="fade-in grid lg:grid-cols-3 gap-4 mt-5" style={{ animationDelay: '60ms' }}>
+        <Slide title="Trends">
+        <div className="grid lg:grid-cols-3 gap-4">
           <div className="lg:col-span-2 rounded-2xl p-5 panel-card" style={{ background: "#FFFDF7", border: `1px solid ${C.line}` }}>
             <h3 className="font-display text-lg mb-3" style={{ color: C.maroon }}>Last 6 months — deposits vs withdrawals</h3>
             <div style={{ width: "100%", height: 220 }}>
@@ -454,8 +461,10 @@ export default function Dashboard({ user, role }) {
             </div>
           </div>
         </div>
+        </Slide>
 
-        <div className="fade-in grid lg:grid-cols-2 gap-4 mt-5" style={{ animationDelay: '120ms' }}>
+        <Slide title="Categories">
+        <div className="grid lg:grid-cols-2 gap-4">
           <div className="rounded-2xl p-5 panel-card" style={{ background: "#FFFDF7", border: `1px solid ${C.line}` }}>
             <h3 className="font-display text-lg mb-3 flex items-center gap-2" style={{ color: C.maroon }}><ArrowDownCircle size={16} /> Deposits by category</h3>
             <div className="flex flex-col gap-3">
@@ -491,8 +500,10 @@ export default function Dashboard({ user, role }) {
             </div>
           </div>
         </div>
+        </Slide>
 
-        <div className="fade-in grid lg:grid-cols-5 gap-4 mt-5" style={{ animationDelay: '180ms' }}>
+        <Slide title="Monthly & Yearly">
+        <div className="grid lg:grid-cols-5 gap-4">
           <div className="lg:col-span-2 rounded-2xl p-5 panel-card max-h-96 overflow-y-auto overflow-x-auto" style={{ background: "#FFFDF7", border: `1px solid ${C.line}` }}>
             <h3 className="font-display text-lg mb-3 flex items-center gap-2 sticky top-0" style={{ color: C.maroon, background: "#FFFDF7" }}><Table2 size={16} /> Month-over-month</h3>
             <table className="w-full text-sm min-w-[380px]">
@@ -553,8 +564,10 @@ export default function Dashboard({ user, role }) {
             )}
           </div>
         </div>
+        </Slide>
 
-        <div className="fade-in rounded-2xl p-5 mt-5 panel-card" style={{ animationDelay: '220ms',  background: "#FFFDF7", border: `1px solid ${C.line}` }}>
+        <Slide title="Donors">
+        <div className="rounded-2xl p-5 panel-card" style={{ background: "#FFFDF7", border: `1px solid ${C.line}` }}>
           <div className="flex items-center justify-between gap-3 mb-3 flex-wrap">
             <h3 className="font-display text-lg flex items-center gap-2" style={{ color: C.maroon }}><Users size={16} /> Donor summary — monthly & cumulative</h3>
             <input
@@ -609,8 +622,10 @@ export default function Dashboard({ user, role }) {
             </table>
           </div>
         </div>
+        </Slide>
 
-        <div className="fade-in flex flex-col sm:flex-row gap-3 mt-6 items-stretch sm:items-center justify-between" style={{ animationDelay: '260ms' }}>
+        <Slide title="Transactions">
+        <div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center justify-between">
           <div className="flex gap-2 flex-1 flex-wrap">
             <div className="flex items-center gap-2 px-3 py-2 rounded-xl flex-1 sm:max-w-xs" style={{ background: "#FFFDF7", border: `1px solid ${C.line}` }}>
               <Search size={15} style={{ color: C.inkSoft }} />
@@ -758,8 +773,10 @@ export default function Dashboard({ user, role }) {
             </div>
           )}
         </div>
+        </Slide>
 
-        <div className="fade-in mt-8 rounded-2xl p-5 panel-card" style={{ animationDelay: '340ms',  background: "#FFFDF7", border: `1px solid ${C.line}` }}>
+        <Slide title="Feedback">
+        <div className="rounded-2xl p-5 panel-card" style={{ background: "#FFFDF7", border: `1px solid ${C.line}` }}>
           <h3 className="font-display text-lg mb-1 flex items-center gap-2" style={{ color: C.maroon }}><MessageSquare size={16} /> Feedback & suggestions</h3>
           <p className="text-xs mb-3" style={{ color: C.inkSoft }}>Tell us what would make this dashboard more useful.</p>
           <form onSubmit={handleSubmitFeedback} className="flex flex-col gap-3">
@@ -789,6 +806,10 @@ export default function Dashboard({ user, role }) {
               )}
             </div>
           )}
+        </div>
+        </Slide>
+
+        </Carousel3D>
         </div>
 
         <p className="text-center text-xs mt-8" style={{ color: C.inkSoft }}>
